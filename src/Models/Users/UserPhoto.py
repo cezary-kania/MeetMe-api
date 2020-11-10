@@ -1,13 +1,13 @@
-from Models import users_db as db
-
+from sqlalchemy import Column, Integer, String, ForeignKey, LargeBinary 
 from sqlalchemy.orm import relationship
-from passlib.hash import pbkdf2_sha256 as sha256
 
+from users_db import Base
 
-class UserPhoto(db.Model):
+class UserPhoto(Base):
     
     __tablename__ = 'UserPhoto'
 
-    id = db.Column(db.Integer, primary_key = True)
-    user_personal_info_id = db.Column(db.Integer, db.ForeignKey('UserPersonalInfo.id'))
+    id = Column(Integer, primary_key = True)
+    image = Column(LargeBinary, nullable = True) # nullable == True - for development purposes
+    user_personal_info_id = Column(Integer, ForeignKey('UserPersonalInfo.id'))
     user_personal_info = relationship('UserPersonalInfo', uselist=False, back_populates = 'photos')

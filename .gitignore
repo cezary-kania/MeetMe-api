@@ -1,0 +1,4 @@
+__pycache__
+
+# local test db file
+app.db

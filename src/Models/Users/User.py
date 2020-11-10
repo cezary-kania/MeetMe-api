@@ -1,15 +1,14 @@
-from Models import users_db as db
-
+from sqlalchemy import Column, Integer, String, Boolean 
 from sqlalchemy.orm import relationship
-from passlib.hash import pbkdf2_sha256 as sha256
 
+from users_db import Base
 
-class User(db.Model):
+class User(Base):
     
     __tablename__ = 'User'
 
-    id = db.Column(db.Integer, primary_key = True)
-    email = db.Column(db.String(100), unique = True, nullable = False)
-    pass_hash = db.Column(db.String(256), nullable = False)
-    personalInfo = relationship('UserPersonalInfo', back_populates = 'personalInfo')
-
+    id = Column(Integer, primary_key = True)
+    email = Column(String(100), unique = True, nullable = False)
+    pass_hash = Column(String(256), nullable = False)
+    is_active = Column(Boolean, default = True, nullable = False)
+    personalInfo = relationship('UserPersonalInfo', back_populates = 'user')
