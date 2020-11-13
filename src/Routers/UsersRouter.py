@@ -5,13 +5,11 @@ from starlette.responses import StreamingResponse
 from Services.UserService import UserService
 from Models.Users import *
 from Schemas.UserSchemas import NewUser, UserPersonalInfoModel, UserPersonalInfoUpdate, UserModel
-from users_db import Base, engine, SessionLocal
+from Data.UserDatabase import Base, engine, SessionLocal
 
 Base.metadata.create_all(bind = engine)
 
 db_session = SessionLocal()
-
-
 
 router = APIRouter()
 
