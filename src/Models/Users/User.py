@@ -11,4 +11,8 @@ class User(Base):
     email = Column(String(100), unique = True, nullable = False)
     pass_hash = Column(String(256), nullable = False)
     is_active = Column(Boolean, default = True, nullable = False)
-    personalInfo = relationship('UserPersonalInfo', back_populates = 'user')
+    personalInfo = relationship('UserPersonalInfo',uselist=False, back_populates = 'user')
+    searchSettings = relationship('UserSearchSettings',uselist=False, back_populates = 'user')
+
+    def __repr__(self):
+        return f'User<id:{self.id},email:{self.email},status:{self.is_active}>'
