@@ -5,9 +5,21 @@ from sqlalchemy.orm import relationship
 from Data.UserDatabase import Base
 
 class GenderEnum(enum.Enum):
-    male = 1
-    female = 2
-    not_specified = 3
+    male = 'male'
+    female = 'female'
+    
+    @staticmethod
+    def values():
+        return list(GenderEnum)
+
+class PrefGenderEnum(enum.Enum):
+    male = 'male'
+    female = 'female'
+    not_specified = 'not_specified'
+    
+    @staticmethod
+    def values():
+        return list(PrefGenderEnum)
 
 class UserSearchSettings(Base):
     
@@ -15,8 +27,11 @@ class UserSearchSettings(Base):
 
     id = Column(Integer, primary_key = True)
     distance = Column(Integer, nullable = False)
-    last_latitude_pos = Column(Float)
-    last_longitude_pos = Column(Float)
+    latitude_pos = Column(Float, default=-1)
+    longitude_pos = Column(Float, default =-1)
     gender = Column(Enum(GenderEnum), nullable = False)
+    gender_preferences = Column(Enum(PrefGenderEnum), nullable = False)
+    minAge = Column(Integer, nullable = False, default=18)
+    maxAge = Column(Integer, nullable = False, default = 100)
     user_id = Column(Integer, ForeignKey('User.id'))
     user = relationship('User', back_populates = 'searchSettings')   
