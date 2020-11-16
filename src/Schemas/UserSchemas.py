@@ -1,7 +1,8 @@
 from pydantic import BaseModel, Field
 from typing import Optional, List
 
-from Models.Users.UserSearchSettings import GenderEnum, PrefGenderEnum
+from Models.Users.UserSearchSettings import PrefGenderEnum
+from Models.Users.UserPersonalInfo import GenderEnum
 class NewUser(BaseModel):
     email: str
     password: str
@@ -10,9 +11,11 @@ class Photo(BaseModel):
     id : int
     class Config:
         orm_mode = True
+
 class UserPersonalInfoModel(BaseModel):
     firstname : str
     lastname : str
+    gender : GenderEnum
     age : int
     photos : List[Photo] = []
     description : str
@@ -26,6 +29,7 @@ class UserPersonalInfoUpdate(BaseModel):
     lastname : Optional[str] = Field(
         None, title='user lastname', max_length= 100
     )
+    gender : Optional[GenderEnum] = None
     age : Optional[int] = Field(
         None, 
         title='user firstname', 
@@ -44,7 +48,6 @@ class UserBaseSearchSettingsModel(BaseModel):
         ...,
         lt=3000
     )
-    gender : GenderEnum
     gender_preferences : PrefGenderEnum
     maxAge : int = Field(
         ..., 
@@ -64,7 +67,6 @@ class UserChangeSearchSettingsModel(BaseModel):
         None,
         lt=3000
     )
-    gender : GenderEnum
     gender_preferences : PrefGenderEnum
     maxAge :  Optional[int] = Field(
         None, 

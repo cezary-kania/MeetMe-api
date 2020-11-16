@@ -4,13 +4,6 @@ from sqlalchemy.orm import relationship
 
 from Data.UserDatabase import Base
 
-class GenderEnum(enum.Enum):
-    male = 'male'
-    female = 'female'
-    
-    @staticmethod
-    def values():
-        return list(GenderEnum)
 
 class PrefGenderEnum(enum.Enum):
     male = 'male'
@@ -29,7 +22,6 @@ class UserSearchSettings(Base):
     distance = Column(Integer, nullable = False)
     latitude_pos = Column(Float, default=-1)
     longitude_pos = Column(Float, default =-1)
-    gender = Column(Enum(GenderEnum), nullable = False)
     gender_preferences = Column(Enum(PrefGenderEnum), nullable = False)
     minAge = Column(Integer, nullable = False, default=18)
     maxAge = Column(Integer, nullable = False, default = 100)

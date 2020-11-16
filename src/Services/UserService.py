@@ -50,6 +50,7 @@ class UserService:
         user.personalInfo = UserPersonalInfo(
             firstname = user_data.firstname,
             lastname = user_data.lastname,
+            gender = user_data.gender,
             age = user_data.age,
             description = user_data.description,
             photos = []
@@ -109,6 +110,8 @@ class UserService:
             user.personalInfo.firstname = user_data.firstname
         if user_data.lastname:
             user.personalInfo.lastname = user_data.lastname
+        if user_data.gender:
+            user.searchSettings.gender = user_data.gender
         if user_data.age:
             user.personalInfo.age = user_data.age
         if user_data.description:
@@ -124,7 +127,6 @@ class UserService:
             raise Exception('Invalid age preferences settings')
         user.searchSettings = UserSearchSettings(
             distance = user_data.distance,
-            gender = user_data.gender,
             gender_preferences = user_data.gender_preferences,
             minAge = user_data.minAge,
             maxAge = user_data.maxAge,
@@ -140,8 +142,6 @@ class UserService:
             raise Exception('Something gone wrong.')
         if user_data.distance:
             user.searchSettings.distance = user_data.distance
-        if user_data.gender:
-            user.searchSettings.gender = user_data.gender
         if user_data.gender_preferences:
             user.searchSettings.gender_preferences = user_data.gender_preferences
         if user_data.minAge:
