@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, LargeBinary 
 from sqlalchemy.orm import relationship
 
-from Data.UserDatabase import Base
+from app.Data.UserDatabase import Base
 
 class UserPhoto(Base):
     

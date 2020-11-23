@@ -1,8 +1,8 @@
 from pydantic import BaseModel, Field
 from typing import Optional, List
 
-from Models.Users.UserSearchSettings import PrefGenderEnum
-from Models.Users.UserPersonalInfo import GenderEnum
+from app.Models.Users.UserSearchSettings import PrefGenderEnum
+from app.Models.Users.UserPersonalInfo import GenderEnum
 class NewUser(BaseModel):
     email: str
     password: str

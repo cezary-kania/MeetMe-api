@@ -2,7 +2,7 @@ import enum
 from sqlalchemy import Column, Integer, String, ForeignKey, Enum 
 from sqlalchemy.orm import relationship
 
-from Data.UserDatabase import Base
+from app.Data.UserDatabase import Base
 
 class GenderEnum(enum.Enum):
     male = 'male'

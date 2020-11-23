@@ -1,15 +1,15 @@
 from sqlalchemy.orm import Session
 
-from Data.ConnectionsDatabase import connections_db
-from Models.Connections.Connection import Connection, ConnectDecision
+from app.Data.ConnectionsDatabase import connections_db
+from app.Models.Connections.Connection import Connection, ConnectDecision
 
 
-from Models.Users import (
+from app.Models.Users import (
     User, 
     UserPersonalInfo
 )
 
-from Services.UserService import UserService
+from app.Services.UserService import UserService
 
 class ConnectionService:
 

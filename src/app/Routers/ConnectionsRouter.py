@@ -2,10 +2,10 @@ from fastapi import APIRouter, HTTPException, UploadFile, File
 from typing import List
 from starlette.responses import StreamingResponse
 
-from Services.ConnetionService import ConnectionService
-from Data.UserDatabase import SessionLocal
+from app.Services.ConnetionService import ConnectionService
+from app.Data.UserDatabase import SessionLocal
 
-from Schemas.UserSchemas import (
+from app.Schemas.UserSchemas import (
     UserModel
 )
 

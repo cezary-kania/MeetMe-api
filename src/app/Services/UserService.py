@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from Models.Users import (
+from app.Models.Users import (
     User, 
     UserPersonalInfo, 
     UserSearchSettings, 
@@ -9,7 +9,7 @@ from Models.Users import (
     PrefGenderEnum
 )
     
-from Schemas.UserSchemas import (
+from app.Schemas.UserSchemas import (
     NewUser, 
     UserPersonalInfoModel, 
     UserPositionModel, 

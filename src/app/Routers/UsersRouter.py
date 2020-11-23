@@ -2,9 +2,9 @@ from fastapi import APIRouter, HTTPException, UploadFile, File
 from typing import List
 from starlette.responses import StreamingResponse
 
-from Services.UserService import UserService
-from Models.Users import *
-from Schemas.UserSchemas import (
+from app.Services.UserService import UserService
+from app.Models.Users import *
+from app.Schemas.UserSchemas import (
     NewUser, 
     UserPersonalInfoModel, 
     UserPersonalInfoUpdate, 
@@ -14,7 +14,7 @@ from Schemas.UserSchemas import (
     UserChangeSearchSettingsModel
 ) 
 
-from Data.UserDatabase import Base, engine, SessionLocal
+from app.Data.UserDatabase import Base, engine, SessionLocal
 
 Base.metadata.create_all(bind = engine)
 
