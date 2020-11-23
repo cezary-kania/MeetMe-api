@@ -3,8 +3,41 @@ version: '3.7'
 services:
   web:
     build: ./src
-    command: uvicorn app.main:app --reload --workers 1 --host 0.0.0.0 --port 8000
+    command: uvicorn app.main:app --reload --workers 1 --host 0.0.0.0 --port 80
     volumes:
       - ./src/:/usr/src/app/
     ports:
-      - 8002:8000
+      - 8080:80
+    environment: 
+      - DB_URL=postgresql://admin:password@user_db:5432/user_db
+  user_db:
+    image: postgres:latest
+    volumes:
+      - db_volume:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=user_db
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    ports:
+      - 8081:80
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@organization.org
+      - PGADMIN_DEFAULT_PASSWORD=password
+    links: 
+      - user_db
+    depends_on: 
+      - user_db
+  mongodb:
+    image: mongo:latest
+    volumes: 
+      - mongodb_volume:/data/db
+    ports:
+      - 27016:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=password
+volumes:
+  db_volume:
+  mongodb_volume: 
