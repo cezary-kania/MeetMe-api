@@ -6,7 +6,8 @@ from app.Models.Connections.Connection import Connection, ConnectDecision
 
 from app.Models.Users import (
     User, 
-    UserPersonalInfo
+    UserPersonalInfo,
+    UserSearchSettings
 )
 
 from app.Services.UserService import UserService
@@ -23,8 +24,10 @@ class ConnectionService:
             raise Exception('User search settings don\'t exists')
         new_propositions = db_session.query(User) \
             .join(UserPersonalInfo) \
+            .join(UserSearchSettings) \
             .filter(UserPersonalInfo.gender == user_search_settings.gender_preferences.value) \
             .filter(UserPersonalInfo.age.between(user_search_settings.minAge, user_search_settings.maxAge)) \
             .filter(User.id != user.id) \
+            .filter(UserSearchSettings.haversine(user_search_settings) <= user_search_settings.distance) \
             .all()
         return new_propositions
