@@ -42,4 +42,5 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=password
 volumes:
   db_volume:
-  mongodb_volume: 
+  mongodb_volume:
+  pgadmin_volume: 
