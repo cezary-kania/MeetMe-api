@@ -1,8 +1,9 @@
 from pymongo import MongoClient
-
-MONGO_URL = 'mongodb://localhost:27017/'
+import os
+MONGO_URL = os.getenv('MONGO_URL')
 mongo_client = MongoClient(MONGO_URL)
+db = mongo_client.meetme_db
 
-connections_db = mongo_client.connections
-
+connections_col = db.connections
+matches_col = db.matches
 

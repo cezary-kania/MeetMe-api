@@ -10,6 +10,7 @@ services:
       - 8080:80
     environment: 
       - DB_URL=postgresql://admin:password@user_db:5432/user_db
+      - MONGO_URL=mongodb://root:password@mongodb:27017
   user_db:
     image: postgres:latest
     volumes:
