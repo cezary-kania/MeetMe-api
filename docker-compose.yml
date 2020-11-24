@@ -29,6 +29,8 @@ services:
       - user_db
     depends_on: 
       - user_db
+    volumes: 
+      - pgadmin_volume:/var/lib/pgadmin
   mongodb:
     image: mongo:latest
     volumes: 
