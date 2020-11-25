@@ -30,12 +30,12 @@ class ConnectionService:
             .filter(UserPersonalInfo.age.between(user_search_settings.minAge, user_search_settings.maxAge)) \
             .filter(User.id != user.id) \
             .filter(UserSearchSettings.haversine(user_search_settings) <= user_search_settings.distance) \
-            .oder_by(User.id.asc()) \
+            .order_by(User.id.asc()) \
             .limit(proposition_amount) \
             .offset(offset) \
             .all()
         for proposed_user in new_propositions:
-            if len(ConnectionService.find_in_old_propositions(user.id, proposed_user.id)) > 0:
+            if ConnectionService.find_in_old_propositions(user.id, proposed_user.id).count() > 0:
                 new_propositions.remove(proposed_user)
         return new_propositions
     
@@ -54,14 +54,17 @@ class ConnectionService:
     @staticmethod
     def check_if_match(user_id: int, proposed_user_id: int, decision: ConnectDecision):
         if decision.value == 'rejected': return False
-        prev_accepted_connections = connections_col.find(
+        prev_accepted_connections = list(connections_col.find(
             {
                 'user_id': proposed_user_id,
                 'proposed_user_id' : user_id,
                 'decision' : 'accepted'
             }
-        )
-        lastOpositeSiteDec = sorted(prev_accepted_connections, key=lambda dec: dec.date, reverse=True)[0]
+        ))
+        lastOpositeSiteList = sorted(prev_accepted_connections, key=lambda dec: dec['date'], reverse=True)
+        lastOpositeSiteDec = None
+        if(len(lastOpositeSiteList) >= 1):
+            lastOpositeSiteDec = lastOpositeSiteList[0]
         if lastOpositeSiteDec is None:
             return False
         else:

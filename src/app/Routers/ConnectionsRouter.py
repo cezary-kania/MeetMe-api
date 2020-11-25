@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Response
 from typing import List
 from starlette.responses import StreamingResponse
 
@@ -32,7 +32,7 @@ def get_new_propositions(user_id : int,proposition_amount: int = 10, offset: int
 
 @router.post('/{user_id}/decide')
 def decide_about_proposition(user_id: int, decision: DecisionModel):
-    user = UserService.get_user(db_session, userId)
+    user = UserService.get_user(db_session, user_id)
     if user is None:
         raise HTTPException(status_code=400, detail="User doesnt exists.")
     try:
@@ -46,9 +46,8 @@ def decide_about_proposition(user_id: int, decision: DecisionModel):
             decision.proposed_user_id,
             decision.decision 
         )
-        return result
-        # if result:
-        #    return Response(status_code=200, content='MATCH') # Problem: Cant import Response 
-        #return Response(status_code=200, content='NOT MATCH') # Problem: Cant import Response 
+        if result:
+            return Response(status_code=200, content='MATCH')
+        return Response(status_code=200, content='NOT MATCH')
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
