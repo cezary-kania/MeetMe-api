@@ -10,7 +10,9 @@ from app.Schemas.UserSchemas import (
     UserModel
 )
 from app.Schemas.ConnectionsSchemas import (
-    DecisionModel
+    DecisionModel,
+    MatchModel,
+    parseMatchDict
 )
 
 db_session = SessionLocal()
@@ -47,5 +49,47 @@ def decide_about_proposition(user_id: int, decision: DecisionModel):
             decision.decision 
         )
         return Response(status_code=200, content=result)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@router.get('/matches/{user_id}/', response_model=List[MatchModel])
+def get_all_matches(user_id: int):
+    user = UserService.get_user(db_session, user_id)
+    if user is None:
+        raise HTTPException(status_code=400, detail="User doesnt exists.")
+    try:
+        new_matches = ConnectionService.get_active_matches(user_id)
+        return [parseMatchDict(match) for match in new_matches]
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@router.get('/matches/{user_id}/new', response_model=List[MatchModel])
+def get_new_matches(user_id: int):
+    user = UserService.get_user(db_session, user_id)
+    if user is None:
+        raise HTTPException(status_code=400, detail="User doesnt exists.")
+    try:
+        new_matches = ConnectionService.get_new_matches(user_id)
+        return [parseMatchDict(match) for match in new_matches]
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@router.patch('/matches/{user_id}/new')
+def set_new_match_as_open(user_id: int, match_id: str):
+    user = UserService.get_user(db_session, user_id)
+    if user is None:
+        raise HTTPException(status_code=400, detail="User doesnt exists.")
+    try:
+        ConnectionService.set_match_as_open(user_id, match_id)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@router.delete('/matches/{user_id}/delete')
+def delete_match(user_id: int, match_id: str):
+    user = UserService.get_user(db_session, user_id)
+    if user is None:
+        raise HTTPException(status_code=400, detail="User doesnt exists.")
+    try:
+        ConnectionService.delete_match(user_id, match_id)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))

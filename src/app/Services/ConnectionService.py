@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-
+from bson import ObjectId
 from app.Data.ConnectionsDatabase import connections_col, matches_col
 from app.Models.Connections.Connection import Connection, ConnectDecision
 
@@ -68,16 +68,100 @@ class ConnectionService:
             return 'NOT MATCH'
         else:
             import datetime
-            matches_col.insert(
+            matches_col.insert_one(
                 {
                     'user1' : user_id,
                     'user2' : proposed_user_id,
+                    'status_for_user_1' : 'new',
+                    'status_for_user_2' : 'new',
                     'status' : 'active',
                     'date': datetime.datetime.utcnow()
                 }
             )
             return 'MATCH'
+    
     @staticmethod
     def find_in_old_propositions(user_id: int, proposed_user_id: int):
         return connections_col.find({'user_id' : user_id, 'proposed_user_id' : proposed_user_id})
-        
+    
+    @staticmethod
+    def get_new_matches(user_id: int):
+        return list(matches_col.find({
+            "$or":[
+                {
+                    'user1' : user_id,
+                    'status_for_user_1' : 'new',
+                    'status' : 'active',
+                },
+                {
+                    'user2' : user_id,
+                    'status_for_user_2' : 'new',
+                    'status' : 'active',
+                }
+            ]
+        }))
+    
+    @staticmethod
+    def set_match_as_open(user_id: int, match_id: str):
+        match = matches_col.find_one(
+            {
+                'user1' : user_id,
+                'status_for_user_1' : 'new',
+                'status' : 'active',
+                '_id' : ObjectId(match_id)
+            }
+        )
+        if match is not None:
+            matches_col.update(
+                {'_id' : ObjectId(match_id)},
+                {"$set":{'status_for_user_1':'open'}}
+            )
+        else:
+            match = matches_col.find_one(
+                {
+                    'user2' : user_id,
+                    'status_for_user_2' : 'new',
+                    'status' : 'active',
+                    '_id' : ObjectId(match_id)
+                }
+            )
+            if match is not None:
+                matches_col.update(
+                    {'_id' : ObjectId(match_id)},
+                    {"$set":{'status_for_user_2':'open'}}
+                )
+    @staticmethod
+    def delete_match(user_id: int, match_id: str):
+        match = matches_col.find_one(
+            {
+                "$or":[
+                    {
+                        'user1' : user_id,
+                        '_id' : ObjectId(match_id)
+                    },
+                    {
+                        'user2' : user_id,
+                        '_id' : ObjectId(match_id)
+                    }
+                ]
+            }
+        )
+        if match is not None:
+            matches_col.update(
+                {'_id' : ObjectId(match_id)},
+                {"$set":{'status' : 'deleted'}}
+            )
+    @staticmethod
+    def get_active_matches(user_id: int):
+        return list(matches_col.find({
+            "$or":[
+                {
+                    'user1' : user_id,
+                    'status' : 'active',
+                },
+                {
+                    'user2' : user_id,
+                    'status' : 'active',
+                }
+            ]
+        }))
