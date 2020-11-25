@@ -46,8 +46,6 @@ def decide_about_proposition(user_id: int, decision: DecisionModel):
             decision.proposed_user_id,
             decision.decision 
         )
-        if result:
-            return Response(status_code=200, content='MATCH')
-        return Response(status_code=200, content='NOT MATCH')
+        return Response(status_code=200, content=result)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))

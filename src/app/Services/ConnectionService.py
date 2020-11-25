@@ -58,15 +58,14 @@ class ConnectionService:
             {
                 'user_id': proposed_user_id,
                 'proposed_user_id' : user_id,
-                'decision' : 'accepted'
             }
         ))
         lastOpositeSiteList = sorted(prev_accepted_connections, key=lambda dec: dec['date'], reverse=True)
         lastOpositeSiteDec = None
         if(len(lastOpositeSiteList) >= 1):
             lastOpositeSiteDec = lastOpositeSiteList[0]
-        if lastOpositeSiteDec is None:
-            return False
+        if lastOpositeSiteDec is None or not (lastOpositeSiteDec['decision'] is not 'accepted'):
+            return 'NOT MATCH'
         else:
             import datetime
             matches_col.insert(
@@ -77,7 +76,7 @@ class ConnectionService:
                     'date': datetime.datetime.utcnow()
                 }
             )
-            return True
+            return 'MATCH'
     @staticmethod
     def find_in_old_propositions(user_id: int, proposed_user_id: int):
         return connections_col.find({'user_id' : user_id, 'proposed_user_id' : proposed_user_id})
